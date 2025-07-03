@@ -81,6 +81,22 @@ class GameActivity : AppCompatActivity() {
         }
         lifecycle.addObserver(retroView)
 
+        // Restauration automatique de l'état du jeu après un changement d'orientation
+        savedInstanceState?.getByteArray("game_save_state")?.let { saveData ->
+            retroView.post {
+                retroView.unserializeState(saveData)
+            }
+        } ?: run {
+            // Sinon, restauration auto depuis le fichier si présent
+            val saveFile = File(filesDir, "auto_save_state.bin")
+            if (saveFile.exists()) {
+                val loadedData = saveFile.readBytes()
+                retroView.post {
+                    retroView.unserializeState(loadedData)
+                }
+            }
+        }
+
         // Appliquer le style SVG par défaut (plus de switch)
         val btnA = findViewById<Button>(R.id.btnA)
         val btnB = findViewById<Button>(R.id.btnB)
@@ -130,6 +146,23 @@ class GameActivity : AppCompatActivity() {
 
         btnCloseMenu.setOnClickListener {
             drawerLayout.closeDrawer(Gravity.END)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (::retroView.isInitialized) {
+            val saveData = retroView.serializeState()
+            outState.putByteArray("game_save_state", saveData)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::retroView.isInitialized) {
+            val saveData = retroView.serializeState()
+            val saveFile = File(filesDir, "auto_save_state.bin")
+            FileOutputStream(saveFile).use { it.write(saveData) }
         }
     }
 
