@@ -19,13 +19,34 @@ import android.view.View
 import android.widget.Switch
 import android.content.SharedPreferences
 import android.widget.ImageButton
+import android.app.AlertDialog
+import android.view.LayoutInflater
+import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import android.widget.TextView
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.ImageView
+import android.util.Log
+import android.content.ContextWrapper
+import androidx.appcompat.view.ContextThemeWrapper
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
 
 class GameActivity : AppCompatActivity() {
     private lateinit var retroView: GLRetroView
+    private val mainScope = MainScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        // Log du contenu de l'intent pour debug
+        Log.d("GameActivity", "Intent extras: ${intent.extras}")
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         val frame = findViewById<ConstraintLayout>(R.id.frame)
@@ -97,6 +118,26 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        // Chargement d'une sauvegarde spécifique si demandé
+        val saveFileName = intent.getStringExtra("save_file")
+        if (!saveFileName.isNullOrEmpty()) {
+            mainScope.launch {
+                retroView.getGLRetroEvents().collect { event ->
+                    if (event is com.swordfish.libretrodroid.GLRetroView.GLRetroEvents.FrameRendered) {
+                        val file = File(filesDir, saveFileName)
+                        if (file.exists()) {
+                            val data = file.readBytes()
+                            val ok = retroView.unserializeState(data)
+                            if (!ok) showDarkToast("Erreur lors du chargement de la sauvegarde")
+                        } else {
+                            showDarkToast("Sauvegarde introuvable")
+                        }
+                        this.cancel() // On ne veut charger qu'une seule fois
+                    }
+                }
+            }
+        }
+
         // Appliquer le style SVG par défaut (plus de switch)
         val btnA = findViewById<Button>(R.id.btnA)
         val btnB = findViewById<Button>(R.id.btnB)
@@ -146,6 +187,68 @@ class GameActivity : AppCompatActivity() {
 
         btnCloseMenu.setOnClickListener {
             drawerLayout.closeDrawer(Gravity.END)
+        }
+
+        val btnSave = findViewById<Button>(R.id.btnSave)
+        btnSave.setOnClickListener {
+            // Quicksave dans le slot 0
+            if (!::retroView.isInitialized) return@setOnClickListener
+            val saveData = retroView.serializeState()
+            val file = File(filesDir, "save_slot_0.sav")
+            file.writeBytes(saveData)
+            Toast.makeText(this, "Quicksave effectué !", Toast.LENGTH_SHORT).show()
+        }
+        btnSave.setOnLongClickListener {
+            showSaveDialog()
+            true
+        }
+
+        val btnLoad = findViewById<Button>(R.id.btnLoad)
+        btnLoad.setOnClickListener {
+            // Chargement du quicksave (slot 0), sinon dernière sauvegarde slot 1-5
+            if (!::retroView.isInitialized) return@setOnClickListener
+            val quickFile = File(filesDir, "save_slot_0.sav")
+            if (quickFile.exists()) {
+                val data = quickFile.readBytes()
+                val ok = retroView.unserializeState(data)
+                if (ok) {
+                    Toast.makeText(this, "Quicksave chargé !", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Erreur lors du chargement du quicksave", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Chercher la dernière sauvegarde parmi les slots 1 à 5
+                val slots = (1..5).map { File(filesDir, "save_slot_${it}.sav") }
+                val lastFile = slots.filter { it.exists() }.maxByOrNull { it.lastModified() }
+                if (lastFile != null) {
+                    val data = lastFile.readBytes()
+                    val ok = retroView.unserializeState(data)
+                    if (ok) {
+                        Toast.makeText(this, "Dernière sauvegarde chargée (slot ${lastFile.name.filter { it.isDigit() }}) !", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Erreur lors du chargement de la sauvegarde", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Aucune sauvegarde trouvée.\nAppuyez sur le bouton de gauche pour créer un quicksave, ou faites un appui long pour accéder aux sauvegardes manuelles.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        btnLoad.setOnLongClickListener {
+            showLoadDialog()
+            true
+        }
+
+        // Ouvre le menu de chargement si demandé par l'intent, mais seulement après la première frame
+        if (intent.getBooleanExtra("open_load_menu", false)) {
+            mainScope.launch {
+                retroView.getGLRetroEvents().collect { event ->
+                    if (event is com.swordfish.libretrodroid.GLRetroView.GLRetroEvents.FrameRendered) {
+                        if (::retroView.isInitialized) retroView.onPause()
+                        showLoadDialog()
+                        this.cancel()
+                    }
+                }
+            }
         }
     }
 
@@ -202,5 +305,254 @@ class GameActivity : AppCompatActivity() {
             }
             android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> retroView.sendKeyEvent(android.view.KeyEvent.ACTION_UP, keyCode)
         }
+    }
+
+    private fun showDarkToast(message: String) {
+        val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        val view = toast.view
+        view?.setBackgroundColor(Color.parseColor("#222222"))
+        val textViewId = android.R.id.message
+        val text = view?.findViewById<TextView?>(textViewId)
+        if (text != null) {
+            text.setTextColor(Color.WHITE)
+        }
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
+    }
+
+    private fun showSaveDialog() {
+        // Met l'émulation en pause à l'ouverture du menu
+        if (::retroView.isInitialized) retroView.onPause()
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_slots, null)
+        val darkContext = ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+        val dialog = AlertDialog.Builder(darkContext)
+            .setView(dialogView)
+            .setTitle("Sauvegarde rapide")
+            .setNegativeButton("Annuler", null)
+            .create()
+        dialog.setOnDismissListener {
+            if (::retroView.isInitialized) retroView.onResume()
+        }
+
+        fun showDarkToast(message: String) {
+            val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
+            val view = toast.view
+            view?.setBackgroundColor(Color.parseColor("#222222"))
+            val textViewId = android.R.id.message
+            val text = view?.findViewById<TextView?>(textViewId)
+            if (text != null) {
+                text.setTextColor(Color.WHITE)
+            }
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        }
+
+        fun saveToSlot(slot: Int) {
+            if (!::retroView.isInitialized) return
+            val saveData = retroView.serializeState()
+            val file = File(filesDir, "save_slot_${slot}.sav")
+            file.writeBytes(saveData)
+            showDarkToast("Sauvegarde effectuée dans le slot $slot")
+            dialog.dismiss()
+        }
+
+        fun updateSlotDates() {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            // Quicksave
+            val quickFile = File(filesDir, "save_slot_0.sav")
+            val quickDate = dialogView.findViewById<TextView>(R.id.quick_date)
+            val quickImg = dialogView.findViewById<View>(R.id.quick_img)
+            if (quickFile.exists()) {
+                val date = Date(quickFile.lastModified())
+                quickDate.text = "Dernière sauvegarde : ${dateFormat.format(date)}"
+                // TODO: Afficher un vrai screenshot si dispo, sinon icône launcher
+                // quickImg.setImageResource(R.mipmap.ic_launcher) // supprimé car quickImg est un View
+                quickImg.setBackgroundColor(Color.parseColor("#222222"))
+            } else {
+                quickDate.text = "vide"
+                // quickImg.setImageResource(R.mipmap.ic_launcher) // supprimé car quickImg est un View
+                quickImg.setBackgroundColor(Color.parseColor("#444444"))
+            }
+            // Slots 1 à 5
+            for (slot in 1..5) {
+                val file = File(filesDir, "save_slot_${slot}.sav")
+                val tv = dialogView.findViewById<TextView>(resources.getIdentifier("slot${slot}_date", "id", packageName))
+                val img = dialogView.findViewById<View>(resources.getIdentifier("slot${slot}_img", "id", packageName))
+                val emptyText = dialogView.findViewById<TextView>(resources.getIdentifier("slot${slot}_empty", "id", packageName))
+                if (file.exists()) {
+                    val date = Date(file.lastModified())
+                    tv.text = "Dernière sauvegarde : ${dateFormat.format(date)}"
+                    img.setBackgroundColor(Color.parseColor("#EEEEEE"))
+                    emptyText.visibility = View.GONE
+                } else {
+                    tv.text = "vide"
+                    img.setBackgroundColor(Color.parseColor("#333333"))
+                    emptyText.visibility = View.VISIBLE
+                }
+            }
+        }
+        updateSlotDates()
+
+        // Sauvegarde immédiate sur pression d'un bouton de slot
+        for (slot in 1..5) {
+            val saveBtn = dialogView.findViewById<Button>(resources.getIdentifier("slot${slot}_load", "id", packageName))
+            if (saveBtn != null) {
+                saveBtn.setOnClickListener {
+                    saveToSlot(slot)
+                }
+            }
+        }
+
+        // Suppression du quicksave (slot 0)
+        val quickDeleteBtn = dialogView.findViewById<Button>(R.id.quick_delete)
+        quickDeleteBtn.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Supprimer le quicksave ? Cette action est irréversible.")
+                .setNegativeButton("Annuler", null)
+                .setPositiveButton("Supprimer") { _, _ ->
+                    val file = File(filesDir, "save_slot_0.sav")
+                    if (file.exists()) {
+                        file.delete()
+                        showDarkToast("Quicksave supprimé")
+                    } else {
+                        showDarkToast("Aucun quicksave à supprimer")
+                    }
+                    // updateSlotDates() n'affiche pas le quicksave, mais on laisse pour cohérence
+                    updateSlotDates()
+                }
+                .show()
+        }
+
+        dialog.show()
+    }
+
+    private fun showLoadDialog() {
+        // Met l'émulation en pause à l'ouverture du menu
+        if (::retroView.isInitialized) retroView.onPause()
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_slots, null)
+        val darkContext = ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+        val dialog = AlertDialog.Builder(darkContext)
+            .setView(dialogView)
+            .setTitle("Charger une sauvegarde")
+            .setNegativeButton("Annuler", null)
+            .create()
+        dialog.setOnDismissListener {
+            if (::retroView.isInitialized) retroView.onResume()
+        }
+
+        fun loadFromSlot(slot: Int) {
+            if (!::retroView.isInitialized) return
+            val file = File(filesDir, "save_slot_${slot}.sav")
+            if (file.exists()) {
+                val data = file.readBytes()
+                val ok = retroView.unserializeState(data)
+                if (ok) {
+                    showDarkToast("Sauvegarde du slot $slot restaurée")
+                } else {
+                    showDarkToast("Erreur lors de la restauration du slot $slot")
+                }
+                dialog.dismiss()
+            } else {
+                showDarkToast("Aucune sauvegarde dans le slot $slot")
+            }
+        }
+
+        fun updateSlotDates() {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            // Quicksave
+            val quickFile = File(filesDir, "save_slot_0.sav")
+            val quickDate = dialogView.findViewById<TextView>(R.id.quick_date)
+            val quickImg = dialogView.findViewById<View>(R.id.quick_img)
+            if (quickFile.exists()) {
+                val date = Date(quickFile.lastModified())
+                quickDate.text = "Dernière sauvegarde : ${dateFormat.format(date)}"
+                // TODO: Afficher un vrai screenshot si dispo, sinon icône launcher
+                // quickImg.setImageResource(R.mipmap.ic_launcher) // supprimé car quickImg est un View
+                quickImg.setBackgroundColor(Color.parseColor("#222222"))
+            } else {
+                quickDate.text = "vide"
+                // quickImg.setImageResource(R.mipmap.ic_launcher) // supprimé car quickImg est un View
+                quickImg.setBackgroundColor(Color.parseColor("#444444"))
+            }
+            // Slots 1 à 5
+            for (slot in 1..5) {
+                val file = File(filesDir, "save_slot_${slot}.sav")
+                val tv = dialogView.findViewById<TextView>(resources.getIdentifier("slot${slot}_date", "id", packageName))
+                val img = dialogView.findViewById<View>(resources.getIdentifier("slot${slot}_img", "id", packageName))
+                val emptyText = dialogView.findViewById<TextView>(resources.getIdentifier("slot${slot}_empty", "id", packageName))
+                if (file.exists()) {
+                    val date = Date(file.lastModified())
+                    tv.text = "Dernière sauvegarde : ${dateFormat.format(date)}"
+                    img.setBackgroundColor(Color.parseColor("#EEEEEE"))
+                    emptyText.visibility = View.GONE
+                } else {
+                    tv.text = "vide"
+                    img.setBackgroundColor(Color.parseColor("#333333"))
+                    emptyText.visibility = View.VISIBLE
+                }
+            }
+        }
+        updateSlotDates()
+
+        // Chargement immédiat sur pression d'un bouton de slot
+        for (slot in 1..5) {
+            val loadBtn = dialogView.findViewById<Button>(resources.getIdentifier("slot${slot}_load", "id", packageName))
+            if (loadBtn != null) {
+                loadBtn.setOnClickListener {
+                    loadFromSlot(slot)
+                }
+            }
+        }
+
+        // Gestion du bouton de chargement du quicksave ou de la sauvegarde la plus récente
+        val quickLoadBtn = dialogView.findViewById<Button>(R.id.quick_load)
+        val slots = (0..5).map { File(filesDir, "save_slot_${it}.sav") }
+        val lastFile = slots.filter { it.exists() }.maxByOrNull { it.lastModified() }
+        if (lastFile != null) {
+            quickLoadBtn.isEnabled = true
+            quickLoadBtn.setOnClickListener {
+                if (!::retroView.isInitialized) return@setOnClickListener
+                val data = lastFile.readBytes()
+                val ok = retroView.unserializeState(data)
+                if (ok) {
+                    showDarkToast("Sauvegarde la plus récente restaurée (slot ${lastFile.name.filter { it.isDigit() }})")
+                } else {
+                    showDarkToast("Erreur lors de la restauration de la sauvegarde")
+                }
+                dialog.dismiss()
+            }
+        } else {
+            quickLoadBtn.isEnabled = false
+        }
+
+        // Suppression du quicksave (slot 0)
+        val quickDeleteBtn2 = dialogView.findViewById<Button>(R.id.quick_delete)
+        if (quickDeleteBtn2 != null) {
+            quickDeleteBtn2.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle("Confirmation")
+                    .setMessage("Supprimer le quicksave ? Cette action est irréversible.")
+                    .setNegativeButton("Annuler", null)
+                    .setPositiveButton("Supprimer") { _, _ ->
+                        val file = File(filesDir, "save_slot_0.sav")
+                        if (file.exists()) {
+                            file.delete()
+                            showDarkToast("Quicksave supprimé")
+                        } else {
+                            showDarkToast("Aucun quicksave à supprimer")
+                        }
+                        updateSlotDates()
+                    }
+                    .show()
+            }
+        }
+
+        dialog.show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainScope.cancel()
     }
 } 

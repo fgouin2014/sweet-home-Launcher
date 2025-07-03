@@ -26,4 +26,17 @@
         android:textColor="#fff"
         android:layout_marginTop="16dp" />
 
+    <Button
+        android:id="@+id/btnLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Charger une sauvegarde"
+        android:textSize="20sp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:backgroundTint="#FF9800"
+        android:textColor="#fff"
+        android:layout_marginTop="12dp"
+        android:visibility="gone" />
+
 </LinearLayout>

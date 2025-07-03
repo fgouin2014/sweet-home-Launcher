@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#222222">
+
+    <!-- Bloc quicksave -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp"
+        android:background="#2A2A2A"
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:clipToOutline="true"
+        android:elevation="2dp"
+        android:backgroundTint="#2A2A2A"
+        android:backgroundTintMode="src_in">
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="32dp">
+            <View
+                android:id="@+id/quick_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#333333" />
+            <TextView
+                android:id="@+id/quick_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Vide"
+                android:textColor="#BBBBBB"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:background="@android:color/transparent"
+                android:visibility="gone" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/quick_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quicksave"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingLeft="8dp" />
+            <TextView
+                android:id="@+id/quick_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12sp"
+                android:textColor="#BBBBBB"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/quick_delete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="🗑️"
+            android:contentDescription="Supprimer le quicksave"
+            android:background="@android:color/transparent"
+            android:textColor="#FF9800"
+            android:textSize="18sp"
+            android:padding="0dp" />
+    </LinearLayout>
+
+    <!-- Bouton charger le quicksave -->
+    <Button
+        android:id="@+id/quick_load"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Charger le quicksave"
+        android:textColor="#FF9800"
+        android:backgroundTint="#333333"
+        android:backgroundTintMode="src_in"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#333" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choisissez un slot de sauvegarde :"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Slot 1 à 5 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:background="#2A2A2A"
+            android:layout_marginBottom="8dp"
+            android:clipToOutline="true"
+            android:elevation="1dp">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="32dp">
+                <View
+                    android:id="@+id/slot1_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+                <TextView
+                    android:id="@+id/slot1_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Vide"
+                    android:textColor="#BBBBBB"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/slot1_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Charger le slot 1"
+                    android:textColor="#FF9800"
+                    android:backgroundTint="#333333"
+                    android:backgroundTintMode="src_in" />
+                <TextView
+                    android:id="@+id/slot1_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="#BBBBBB"
+                    android:gravity="end"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:background="#2A2A2A"
+            android:layout_marginBottom="8dp"
+            android:clipToOutline="true"
+            android:elevation="1dp">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="32dp">
+                <View
+                    android:id="@+id/slot2_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+                <TextView
+                    android:id="@+id/slot2_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Vide"
+                    android:textColor="#BBBBBB"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/slot2_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Charger le slot 2"
+                    android:textColor="#FF9800"
+                    android:backgroundTint="#333333"
+                    android:backgroundTintMode="src_in" />
+                <TextView
+                    android:id="@+id/slot2_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="#BBBBBB"
+                    android:gravity="end"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:background="#2A2A2A"
+            android:layout_marginBottom="8dp"
+            android:clipToOutline="true"
+            android:elevation="1dp">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="32dp">
+                <View
+                    android:id="@+id/slot3_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+                <TextView
+                    android:id="@+id/slot3_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Vide"
+                    android:textColor="#BBBBBB"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/slot3_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Charger le slot 3"
+                    android:textColor="#FF9800"
+                    android:backgroundTint="#333333"
+                    android:backgroundTintMode="src_in" />
+                <TextView
+                    android:id="@+id/slot3_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="#BBBBBB"
+                    android:gravity="end"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:background="#2A2A2A"
+            android:layout_marginBottom="8dp"
+            android:clipToOutline="true"
+            android:elevation="1dp">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="32dp">
+                <View
+                    android:id="@+id/slot4_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+                <TextView
+                    android:id="@+id/slot4_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Vide"
+                    android:textColor="#BBBBBB"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/slot4_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Charger le slot 4"
+                    android:textColor="#FF9800"
+                    android:backgroundTint="#333333"
+                    android:backgroundTintMode="src_in" />
+                <TextView
+                    android:id="@+id/slot4_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="#BBBBBB"
+                    android:gravity="end"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:background="#2A2A2A"
+            android:layout_marginBottom="8dp"
+            android:clipToOutline="true"
+            android:elevation="1dp">
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="32dp">
+                <View
+                    android:id="@+id/slot5_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+                <TextView
+                    android:id="@+id/slot5_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Vide"
+                    android:textColor="#BBBBBB"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/slot5_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Charger le slot 5"
+                    android:textColor="#FF9800"
+                    android:backgroundTint="#333333"
+                    android:backgroundTintMode="src_in" />
+                <TextView
+                    android:id="@+id/slot5_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    android:textColor="#BBBBBB"
+                    android:gravity="end"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout> 

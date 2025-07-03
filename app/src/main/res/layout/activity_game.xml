@@ -146,6 +146,79 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp" />
 
+        <Button
+            android:id="@+id/rewind_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/rewind_button"
+            android:text=""
+            android:contentDescription="Rewind"
+            android:alpha="0.9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp" />
+
+        <LinearLayout
+            android:id="@+id/saveLoadContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/save_button"
+                    android:contentDescription="Sauvegarder l'état du jeu"
+                    android:alpha="0.9" />
+                <TextView
+                    android:id="@+id/labelSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sauvegarder"
+                    android:textSize="10sp"
+                    android:textColor="#fff"
+                    android:gravity="center"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="36dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <Button
+                    android:id="@+id/btnLoad"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/save_button"
+                    android:contentDescription="Charger un état de jeu"
+                    android:alpha="0.9" />
+                <TextView
+                    android:id="@+id/labelLoad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Charger"
+                    android:textSize="10sp"
+                    android:textColor="#fff"
+                    android:gravity="center"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Drawer menu latéral à droite -->
