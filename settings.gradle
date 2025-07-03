@@ -1,0 +1,2 @@
+rootProject.name = "sweet-home-launcher"
+include ':app', ':libretrodroid' 
