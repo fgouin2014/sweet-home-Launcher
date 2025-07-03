@@ -30,7 +30,7 @@ class GameActivity : AppCompatActivity() {
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         val frame = findViewById<ConstraintLayout>(R.id.frame)
         val btnCloseMenu = findViewById<Button>(R.id.btnCloseMenu)
-        val btnMenuIcon = findViewById<ImageButton>(R.id.btnMenuIcon)
+        val btnMenuIcon = findViewById<Button>(R.id.btnMenuIcon)
 
         val abi = getDeviceAbi()
         val coreName = "fceumm_libretro_android.so" // ou choisis dynamiquement selon le core voulu

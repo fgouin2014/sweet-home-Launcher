@@ -1,4 +1,14 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@drawable/ic_dpad_right_pressed" />
-    <item android:drawable="@drawable/ic_dpad_right" />
-</selector> 
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+  <path
+      android:pathData="M4,2L16,2A2,2 0,0 1,18 4L18,16A2,2 0,0 1,16 18L4,18A2,2 0,0 1,2 16L2,4A2,2 0,0 1,4 2z"
+      android:strokeWidth="1"
+      android:fillColor="#333"
+      android:strokeColor="#424242"/>
+  <path
+      android:pathData="M15,10l-5,-5l0,10z"
+      android:fillColor="#fff"/>
+</vector>
