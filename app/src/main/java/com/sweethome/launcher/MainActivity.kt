@@ -11,10 +11,12 @@ import android.view.View
 import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.TextView
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "onCreate appelé")
         setContentView(R.layout.activity_main)
 
         // Affichage de la liste des fichiers présents dans filesDir
@@ -33,19 +35,28 @@ class MainActivity : AppCompatActivity() {
         val btnNewGame = findViewById<Button>(R.id.btnNewGame)
         val btnContinue = findViewById<Button>(R.id.btnContinue)
         val btnLoad = findViewById<Button>(R.id.btnLoad)
+        Log.d("MainActivity", "btnLoad = $btnLoad")
 
         // Vérifie la présence d'une auto-save (partie en cours)
         val hasAutoSave = File(filesDir, "auto_save_state.bin").exists()
         // Vérifie la présence d'une sauvegarde manuelle
         val hasSave = (File(filesDir, "save_slot_0.sav").exists() || (1..5).any { File(filesDir, "save_slot_${'$'}it.sav").exists() })
 
-        btnContinue.isEnabled = hasAutoSave
-        btnLoad.isEnabled = hasSave
+        btnContinue.isEnabled = true
+        btnLoad.isEnabled = true
+        Log.d("MainActivity", "btnContinue.isEnabled = ${btnContinue.isEnabled}, btnLoad.isEnabled = ${btnLoad.isEnabled}")
 
         btnNewGame.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
-            intent.putExtra("new_game", true)
-            startActivity(intent)
+            AlertDialog.Builder(this)
+                .setTitle("Nouvelle partie")
+                .setMessage("La partie en cours sera fermée. Les sauvegardes existantes ne seront pas supprimées. Voulez-vous vraiment commencer une nouvelle partie ?")
+                .setNegativeButton("Annuler", null)
+                .setPositiveButton("Commencer") { _, _ ->
+                    val intent = Intent(this, GameActivity::class.java)
+                    intent.putExtra("new_game", true)
+                    startActivity(intent)
+                }
+                .show()
         }
 
         btnContinue.setOnClickListener {
@@ -56,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLoad.setOnClickListener {
-            // Ouvre le menu de chargement de sauvegarde
+            Log.d("MainActivity", "Clic sur Charger, lancement GameActivity avec open_load_menu")
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("open_load_menu", true)
             startActivity(intent)

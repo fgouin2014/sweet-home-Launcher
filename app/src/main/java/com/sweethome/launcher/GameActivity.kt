@@ -238,12 +238,17 @@ class GameActivity : AppCompatActivity() {
             true
         }
 
-        // Ouvre le menu de chargement si demandé par l'intent, mais seulement après la première frame
+        // Ouvre le menu de chargement si demandé, même si new_game est présent
         if (intent.getBooleanExtra("open_load_menu", false)) {
+            Log.d("GameActivity", "Appel de showLoadDialog automatique (open_load_menu)")
             mainScope.launch {
                 retroView.getGLRetroEvents().collect { event ->
                     if (event is com.swordfish.libretrodroid.GLRetroView.GLRetroEvents.FrameRendered) {
-                        if (::retroView.isInitialized) retroView.onPause()
+                        if (::retroView.isInitialized) {
+                            retroView.reset()
+                            retroView.onPause()
+                        }
+                        Log.d("GameActivity", "Entrée dans showLoadDialog() (open_load_menu)")
                         showLoadDialog()
                         this.cancel()
                     }
@@ -428,6 +433,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun showLoadDialog() {
+        Log.d("GameActivity", "Début de showLoadDialog()")
         // Met l'émulation en pause à l'ouverture du menu
         if (::retroView.isInitialized) retroView.onPause()
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_slots, null)

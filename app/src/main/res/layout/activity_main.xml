@@ -37,7 +37,7 @@
         android:backgroundTint="#388E3C"
         android:textColor="#fff"
         android:layout_marginTop="12dp"
-        android:enabled="false" />
+        android:enabled="true" />
 
     <Button
         android:id="@+id/btnLoad"
@@ -50,6 +50,6 @@
         android:backgroundTint="#FF9800"
         android:textColor="#fff"
         android:layout_marginTop="12dp"
-        android:enabled="false" />
+        android:enabled="true" />
 
 </LinearLayout>
