@@ -45,6 +45,8 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        val isNewGame = intent.getBooleanExtra("new_game", false)
+
         // Log du contenu de l'intent pour debug
         Log.d("GameActivity", "Intent extras: ${intent.extras}")
 
@@ -102,18 +104,16 @@ class GameActivity : AppCompatActivity() {
         }
         lifecycle.addObserver(retroView)
 
-        // Restauration automatique de l'état du jeu après un changement d'orientation
-        savedInstanceState?.getByteArray("game_save_state")?.let { saveData ->
-            retroView.post {
-                retroView.unserializeState(saveData)
-            }
-        } ?: run {
-            // Sinon, restauration auto depuis le fichier si présent
-            val saveFile = File(filesDir, "auto_save_state.bin")
-            if (saveFile.exists()) {
-                val loadedData = saveFile.readBytes()
-                retroView.post {
-                    retroView.unserializeState(loadedData)
+        if (!isNewGame) {
+            // Chargement automatique de l'état du jeu après un changement d'orientation
+            savedInstanceState?.getByteArray("game_save_state")?.let { saveData ->
+                retroView.post { retroView.unserializeState(saveData) }
+            } ?: run {
+                // Sinon, restauration auto depuis le fichier si présent
+                val saveFile = File(filesDir, "auto_save_state.bin")
+                if (saveFile.exists()) {
+                    val loadedData = saveFile.readBytes()
+                    retroView.post { retroView.unserializeState(loadedData) }
                 }
             }
         }
@@ -501,6 +501,29 @@ class GameActivity : AppCompatActivity() {
             if (loadBtn != null) {
                 loadBtn.setOnClickListener {
                     loadFromSlot(slot)
+                }
+            }
+            // Ajout du bouton de suppression pour chaque slot
+            val deleteBtn = dialogView.findViewById<Button>(resources.getIdentifier("slot${slot}_delete", "id", packageName))
+            if (deleteBtn != null) {
+                val file = File(filesDir, "save_slot_${slot}.sav")
+                deleteBtn.isEnabled = file.exists()
+                deleteBtn.setOnClickListener {
+                    AlertDialog.Builder(this)
+                        .setTitle("Confirmation")
+                        .setMessage("Supprimer la sauvegarde du slot $slot ? Cette action est irréversible.")
+                        .setNegativeButton("Annuler", null)
+                        .setPositiveButton("Supprimer") { _, _ ->
+                            if (file.exists()) {
+                                file.delete()
+                                showDarkToast("Sauvegarde du slot $slot supprimée")
+                            } else {
+                                showDarkToast("Aucune sauvegarde à supprimer dans le slot $slot")
+                            }
+                            updateSlotDates()
+                            deleteBtn.isEnabled = file.exists()
+                        }
+                        .show()
                 }
             }
         }

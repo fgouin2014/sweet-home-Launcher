@@ -1,3 +1,6 @@
 <resources>
     <string name="desc_menu">Menu latéral</string>
+    <string name="btn_load">Charger une sauvegarde</string>
+    <string name="btn_new_game">Nouvelle partie</string>
+    <string name="btn_continue">Continuer</string>
 </resources> 

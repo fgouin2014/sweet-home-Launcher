@@ -15,10 +15,10 @@
         android:scaleType="fitCenter" />
 
     <Button
-        android:id="@+id/btnPlay"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnNewGame"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jouer à Sweet Home"
+        android:text="@string/btn_new_game"
         android:textSize="20sp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
@@ -27,16 +27,29 @@
         android:layout_marginTop="16dp" />
 
     <Button
-        android:id="@+id/btnLoad"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Charger une sauvegarde"
+        android:text="@string/btn_continue"
+        android:textSize="20sp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:backgroundTint="#388E3C"
+        android:textColor="#fff"
+        android:layout_marginTop="12dp"
+        android:enabled="false" />
+
+    <Button
+        android:id="@+id/btnLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_load"
         android:textSize="20sp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:backgroundTint="#FF9800"
         android:textColor="#fff"
         android:layout_marginTop="12dp"
-        android:visibility="gone" />
+        android:enabled="false" />
 
 </LinearLayout>

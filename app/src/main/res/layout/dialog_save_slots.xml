@@ -165,6 +165,16 @@
                     android:gravity="end"
                     android:paddingTop="2dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/slot1_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="🗑️"
+                android:contentDescription="Supprimer le slot 1"
+                android:background="@android:color/transparent"
+                android:textColor="#FF9800"
+                android:textSize="18sp"
+                android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -219,6 +229,16 @@
                     android:gravity="end"
                     android:paddingTop="2dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/slot2_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="🗑️"
+                android:contentDescription="Supprimer le slot 2"
+                android:background="@android:color/transparent"
+                android:textColor="#FF9800"
+                android:textSize="18sp"
+                android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -273,6 +293,16 @@
                     android:gravity="end"
                     android:paddingTop="2dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/slot3_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="🗑️"
+                android:contentDescription="Supprimer le slot 3"
+                android:background="@android:color/transparent"
+                android:textColor="#FF9800"
+                android:textSize="18sp"
+                android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -327,6 +357,16 @@
                     android:gravity="end"
                     android:paddingTop="2dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/slot4_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="🗑️"
+                android:contentDescription="Supprimer le slot 4"
+                android:background="@android:color/transparent"
+                android:textColor="#FF9800"
+                android:textSize="18sp"
+                android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -381,6 +421,16 @@
                     android:gravity="end"
                     android:paddingTop="2dp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/slot5_delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="🗑️"
+                android:contentDescription="Supprimer le slot 5"
+                android:background="@android:color/transparent"
+                android:textColor="#FF9800"
+                android:textSize="18sp"
+                android:padding="0dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout> 
