@@ -265,11 +265,22 @@ class GameActivity : AppCompatActivity() {
             val saveData = retroView.serializeState()
             val file = File(filesDir, "save_slot_0.sav")
             file.writeBytes(saveData)
-            // Capture d'écran pour le quicksave
+            // Capture d'écran pour le quicksave avec traitement d'image
             retroView.captureScreenshotSafe { screenshotBytes ->
                 if (screenshotBytes != null && screenshotBytes.isNotEmpty()) {
-                    val screenshotFile = File(filesDir, "save_slot_0.png")
-                    screenshotFile.writeBytes(screenshotBytes)
+                    val fullBitmap = BitmapFactory.decodeByteArray(screenshotBytes, 0, screenshotBytes.size)
+                    if (fullBitmap != null) {
+                        // Crop central 1080x828 (même traitement que les autres slots)
+                        val cropWidth = 1080
+                        val cropHeight = 828
+                        val cropLeft = 0
+                        val cropTop = (fullBitmap.height - cropHeight) / 2
+                        val croppedBitmap = Bitmap.createBitmap(fullBitmap, cropLeft, cropTop, cropWidth, cropHeight)
+                        val screenshotFile = File(filesDir, "save_slot_0.png")
+                        FileOutputStream(screenshotFile).use { out ->
+                            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        }
+                    }
                 }
                 Toast.makeText(this, "Quicksave effectué !", Toast.LENGTH_SHORT).show()
             }
@@ -467,8 +478,16 @@ class GameActivity : AppCompatActivity() {
             if (quickImg is ImageView) {
                 if (quickPng.exists()) {
                     val bmp = BitmapFactory.decodeFile(quickPng.absolutePath)
-                    quickImg.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    quickImg.setImageBitmap(bmp)
+                    if (bmp != null && bmp.width == 256 && bmp.height == 240) {
+                        val cropTop = 22
+                        val cropHeight = 196
+                        val cropped = Bitmap.createBitmap(bmp, 0, cropTop, 256, cropHeight)
+                        quickImg.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        quickImg.setImageBitmap(cropped)
+                    } else {
+                        quickImg.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        quickImg.setImageBitmap(bmp)
+                    }
                 } else {
                     quickImg.setBackgroundColor(Color.parseColor("#222222"))
                 }
@@ -497,8 +516,16 @@ class GameActivity : AppCompatActivity() {
                 if (img is ImageView) {
                     if (screenshotFile.exists()) {
                         val bmp = BitmapFactory.decodeFile(screenshotFile.absolutePath)
-                        img.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                        img.setImageBitmap(bmp)
+                        if (bmp != null && bmp.width == 256 && bmp.height == 240) {
+                            val cropTop = 22
+                            val cropHeight = 196
+                            val cropped = Bitmap.createBitmap(bmp, 0, cropTop, 256, cropHeight)
+                            img.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                            img.setImageBitmap(cropped)
+                        } else {
+                            img.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                            img.setImageBitmap(bmp)
+                        }
                     } else {
                         img.setBackgroundColor(Color.parseColor("#EEEEEE"))
                     }
@@ -538,7 +565,7 @@ class GameActivity : AppCompatActivity() {
         val darkContext = ContextThemeWrapper(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
         val dialog = AlertDialog.Builder(darkContext)
             .setView(dialogView)
-            .setTitle("Sauvegarde rapide")
+            .setTitle("Sauvegarder la partie")
             .setNegativeButton("Annuler", null)
             .create()
         dialog.setOnDismissListener {
@@ -567,7 +594,21 @@ class GameActivity : AppCompatActivity() {
             val tempScreenshotFile = File(filesDir, "temp_screenshot.png")
             val screenshotFile = File(filesDir, "save_slot_${slot}.png")
             if (tempScreenshotFile.exists()) {
-                tempScreenshotFile.copyTo(screenshotFile, overwrite = true)
+                val buffer = tempScreenshotFile.readBytes()
+                val fullBitmap = BitmapFactory.decodeByteArray(buffer, 0, buffer.size)
+                if (fullBitmap != null) {
+                    // Crop central 1080x828
+                    val cropWidth = 1080
+                    val cropHeight = 828
+                    val cropLeft = 0
+                    val cropTop = (fullBitmap.height - cropHeight) / 2
+                    val croppedBitmap = Bitmap.createBitmap(fullBitmap, cropLeft, cropTop, cropWidth, cropHeight)
+                    FileOutputStream(screenshotFile).use { out ->
+                        croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    }
+                } else {
+                    tempScreenshotFile.copyTo(screenshotFile, overwrite = true)
+                }
             }
             
             updateSlotDates(dialogView)
