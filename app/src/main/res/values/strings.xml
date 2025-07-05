@@ -3,4 +3,5 @@
     <string name="btn_load">Charger une sauvegarde</string>
     <string name="btn_new_game">Nouvelle partie</string>
     <string name="btn_continue">Continuer</string>
+    <string name="btn_test_rom">Test ROM (240pee)</string>
 </resources> 

@@ -202,6 +202,34 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
                 <Button
+                    android:id="@+id/btnScreenshot"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/blank_button"
+                    android:text="📸"
+                    android:contentDescription="Prendre une capture d'écran du jeu"
+                    android:alpha="0.9" />
+                <TextView
+                    android:id="@+id/labelScreenshot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Capture"
+                    android:textSize="10sp"
+                    android:textColor="#fff"
+                    android:gravity="center"
+                    android:paddingTop="2dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="36dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <Button
                     android:id="@+id/btnLoad"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
@@ -219,6 +247,18 @@
                     android:paddingTop="2dp" />
             </LinearLayout>
         </LinearLayout>
+
+        <!-- ImageView debug pour afficher le screenshot natif -->
+        <ImageView
+            android:id="@+id/debugScreenshot"
+            android:layout_width="256dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="fitCenter"
+            android:background="#222"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Drawer menu latéral à droite -->
@@ -256,6 +296,52 @@
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:gravity="center" />
+        </LinearLayout>
+
+        <!-- Contenu du menu -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="56dp">
+
+            <!-- Bouton Power-Off -->
+            <Button
+                android:id="@+id/btnPowerOff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Power-Off"
+                android:textSize="16sp"
+                android:backgroundTint="#D32F2F"
+                android:textColor="#fff"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Bouton Hardware Reset -->
+            <Button
+                android:id="@+id/btnHardwareReset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hardware Reset"
+                android:textSize="16sp"
+                android:backgroundTint="#FF9800"
+                android:textColor="#fff"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Bouton Retour à l'écran titre -->
+            <Button
+                android:id="@+id/btnReturnToTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Retour à l'écran titre"
+                android:textSize="16sp"
+                android:backgroundTint="#2196F3"
+                android:textColor="#fff"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp" />
+
         </LinearLayout>
 
     </FrameLayout>

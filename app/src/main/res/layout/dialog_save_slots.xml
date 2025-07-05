@@ -23,11 +23,16 @@
         <FrameLayout
             android:layout_width="48dp"
             android:layout_height="32dp">
-            <View
+            <ImageView
                 android:id="@+id/quick_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#333333" />
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxWidth="48dp"
+                android:maxHeight="45dp"
+                android:background="#333333"
+                android:scaleType="centerInside"
+                android:contentDescription="Aperçu quicksave" />
             <TextView
                 android:id="@+id/quick_empty"
                 android:layout_width="match_parent"
@@ -113,6 +118,7 @@
 
         <!-- Slot 1 à 5 -->
         <LinearLayout
+            android:id="@+id/slot1_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -125,11 +131,16 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="32dp">
-                <View
+                <ImageView
                     android:id="@+id/slot1_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="48dp"
+                    android:maxHeight="45dp"
+                    android:background="#333333"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Aperçu sauvegarde slot 1" />
                 <TextView
                     android:id="@+id/slot1_empty"
                     android:layout_width="match_parent"
@@ -177,6 +188,7 @@
                 android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/slot2_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -189,11 +201,16 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="32dp">
-                <View
+                <ImageView
                     android:id="@+id/slot2_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="48dp"
+                    android:maxHeight="45dp"
+                    android:background="#333333"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Aperçu sauvegarde slot 2" />
                 <TextView
                     android:id="@+id/slot2_empty"
                     android:layout_width="match_parent"
@@ -241,6 +258,7 @@
                 android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/slot3_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -253,11 +271,16 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="32dp">
-                <View
+                <ImageView
                     android:id="@+id/slot3_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="48dp"
+                    android:maxHeight="45dp"
+                    android:background="#333333"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Aperçu sauvegarde slot 3" />
                 <TextView
                     android:id="@+id/slot3_empty"
                     android:layout_width="match_parent"
@@ -305,6 +328,7 @@
                 android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/slot4_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -317,11 +341,16 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="32dp">
-                <View
+                <ImageView
                     android:id="@+id/slot4_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="48dp"
+                    android:maxHeight="45dp"
+                    android:background="#333333"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Aperçu sauvegarde slot 4" />
                 <TextView
                     android:id="@+id/slot4_empty"
                     android:layout_width="match_parent"
@@ -369,6 +398,7 @@
                 android:padding="0dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/slot5_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -381,11 +411,16 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="32dp">
-                <View
+                <ImageView
                     android:id="@+id/slot5_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="48dp"
+                    android:maxHeight="45dp"
+                    android:background="#333333"
+                    android:scaleType="centerInside"
+                    android:contentDescription="Aperçu sauvegarde slot 5" />
                 <TextView
                     android:id="@+id/slot5_empty"
                     android:layout_width="match_parent"

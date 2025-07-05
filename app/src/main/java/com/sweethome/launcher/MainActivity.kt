@@ -16,13 +16,7 @@ import android.util.Log
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate appelé")
         setContentView(R.layout.activity_main)
-
-        // Affichage de la liste des fichiers présents dans filesDir
-        val filesList = filesDir.listFiles()?.joinToString("\n") { it.name } ?: "Aucun fichier"
-        android.util.Log.d("MainActivity", "Fichiers dans filesDir :\n$filesList")
-        android.widget.Toast.makeText(this, filesList, android.widget.Toast.LENGTH_LONG).show()
 
         // Affichage de l'image depuis les assets
         val imageView = findViewById<ImageView>(R.id.coverImage)
@@ -35,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val btnNewGame = findViewById<Button>(R.id.btnNewGame)
         val btnContinue = findViewById<Button>(R.id.btnContinue)
         val btnLoad = findViewById<Button>(R.id.btnLoad)
-        Log.d("MainActivity", "btnLoad = $btnLoad")
+        val btnTestRom = findViewById<Button>(R.id.btnTestRom)
 
         // Vérifie la présence d'une auto-save (partie en cours)
         val hasAutoSave = File(filesDir, "auto_save_state.bin").exists()
@@ -44,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         btnContinue.isEnabled = true
         btnLoad.isEnabled = true
-        Log.d("MainActivity", "btnContinue.isEnabled = ${btnContinue.isEnabled}, btnLoad.isEnabled = ${btnLoad.isEnabled}")
 
         btnNewGame.setOnClickListener {
             AlertDialog.Builder(this)
@@ -67,10 +60,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLoad.setOnClickListener {
-            Log.d("MainActivity", "Clic sur Charger, lancement GameActivity avec open_load_menu")
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("open_load_menu", true)
             startActivity(intent)
         }
+
+        btnTestRom.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("test_rom", true)
+            startActivity(intent)
+        }
+
+        // TEST: création d'un fichier pour vérifier le dossier filesDir
+        val testFile = File(filesDir, "test_hello.txt")
+        testFile.writeText("coucou")
+        Log.d("DEBUG", "Test file écrit : ${testFile.absolutePath}")
     }
 }

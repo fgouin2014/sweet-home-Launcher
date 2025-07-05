@@ -80,6 +80,9 @@ class GLRetroView(
 
     private var lifecycle: Lifecycle? = null
 
+    private var surfaceWidth: Int = 0
+    private var surfaceHeight: Int = 0
+
     init {
         openGLESVersion = getGLESVersion(context)
         preserveEGLContextOnPause = true
@@ -181,7 +184,6 @@ class GLRetroView(
     fun getGLRetroEvents(): Flow<GLRetroEvents> {
         return retroGLEventsSubject
     }
-
     fun getGLRetroErrors(): Flow<Int> {
         return retroGLIssuesErrors
     }
@@ -296,6 +298,8 @@ class GLRetroView(
         }
 
         override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) = catchExceptions {
+            surfaceWidth = width
+            surfaceHeight = height
             Thread.currentThread().priority = Thread.MAX_PRIORITY
             LibretroDroid.onSurfaceChanged(width, height)
         }
@@ -472,6 +476,26 @@ class GLRetroView(
     sealed class GLRetroEvents {
         object FrameRendered: GLRetroEvents()
         object SurfaceCreated: GLRetroEvents()
+    }
+
+    external fun captureScreenshot256x240(surfaceWidth: Int, surfaceHeight: Int): ByteArray?
+
+    /**
+     * Capture un screenshot 256x240 sur le thread OpenGL et retourne le résultat sur le thread principal.
+     * Version avec surfaceWidth/surfaceHeight explicites.
+     */
+    fun captureScreenshotSafe(surfaceWidth: Int, surfaceHeight: Int, callback: (ByteArray?) -> Unit) {
+        queueEvent {
+            val bytes = captureScreenshot256x240(surfaceWidth, surfaceHeight)
+            post { callback(bytes) }
+        }
+    }
+
+    /**
+     * Version pratique qui utilise la taille de la vue courante.
+     */
+    fun captureScreenshotSafe(callback: (ByteArray?) -> Unit) {
+        captureScreenshotSafe(this.width, this.height, callback)
     }
 
     companion object {

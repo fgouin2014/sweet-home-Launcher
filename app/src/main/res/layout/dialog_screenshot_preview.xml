@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#CC222222">
+
+    <ImageView
+        android:id="@+id/screenshotPreviewImage"
+        android:layout_width="256dp"
+        android:layout_height="240dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="Capture d'écran du jeu"/>
+
+    <Button
+        android:id="@+id/btnCloseScreenshotPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fermer"
+        android:layout_marginTop="12dp"/>
+</LinearLayout> 

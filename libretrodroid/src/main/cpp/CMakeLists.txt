@@ -86,6 +86,7 @@ add_library(libretrodroid SHARED
         microphone/microphone.cpp
         microphone/microphoneinterface.h
         microphone/microphoneinterface.cpp
+        screenshot_jni.cpp
         ${LIBRETRO_COMMON}
 )
 
